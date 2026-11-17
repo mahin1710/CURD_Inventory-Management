@@ -1,0 +1,26 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables & Secrets
+.env
+.env.local
+.git/github_token
+
+# IDE & Editor Configs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Database & Logs
+*.db
+*.sqlite3
+*.log
