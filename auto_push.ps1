@@ -4,6 +4,7 @@
 $repoDir = "C:\Users\mahed\Desktop\CURD_Inventory"
 Set-Location $repoDir
 
+$logFile = Join-Path $repoDir ".git\auto_push.log"
 $tokenFile = Join-Path $repoDir ".git\github_token"
 $githubToken = ""
 if (Test-Path $tokenFile) {
@@ -19,37 +20,41 @@ if ($githubToken) {
 
 git branch -M main
 
-Write-Host "===================================================" -ForegroundColor Cyan
-Write-Host "  CURD Inventory - GitHub 10-Min Auto-Push" -ForegroundColor Cyan
-Write-Host "  Repository: https://github.com/mahin1710/CURD_Inventory-Management" -ForegroundColor Green
-Write-Host "===================================================" -ForegroundColor Cyan
-Write-Host "Running in background... Checking for changes every 10 minutes (600s)." -ForegroundColor Gray
+function Log-Msg([string]$msg, [string]$color = "White") {
+    $line = "[$((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))] $msg"
+    Write-Host $line -ForegroundColor $color
+    Add-Content -Path $logFile -Value $line -ErrorAction SilentlyContinue
+}
 
-# Interval in seconds (10 minutes = 600 seconds)
+Log-Msg "===================================================" "Cyan"
+Log-Msg "  CURD Inventory - GitHub 10-Min Auto-Push" "Cyan"
+Log-Msg "  Repository: https://github.com/mahin1710/CURD_Inventory-Management" "Green"
+Log-Msg "===================================================" "Cyan"
+Log-Msg "Monitoring started. Checking for changes every 10 minutes (600s)." "Gray"
+
 $intervalSeconds = 600
 
 while ($true) {
     try {
         Set-Location $repoDir
         $status = git status --porcelain
-        $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
         if ($status) {
-            Write-Host "[$timestamp] Changes detected. Staging and committing..." -ForegroundColor Yellow
+            Log-Msg "Changes detected. Staging and committing..." "Yellow"
             git add .
+            $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
             git commit -m "Auto-sync update: $timestamp"
-            Write-Host "[$timestamp] Pushing to GitHub (origin/main)..." -ForegroundColor Yellow
+            Log-Msg "Pushing to GitHub (origin/main)..." "Yellow"
             
             $env:GIT_TERMINAL_PROMPT = "0"
             $output = git push origin main 2>&1
-            Write-Host "[$timestamp] $output" -ForegroundColor Green
-            Write-Host "[$timestamp] Successfully synced to GitHub!" -ForegroundColor Green
+            Log-Msg "$output" "Green"
+            Log-Msg "Successfully synced to GitHub!" "Green"
         } else {
-            Write-Host "[$timestamp] Workspace clean. No changes to commit." -ForegroundColor Gray
+            Log-Msg "Workspace clean. No changes to commit." "Gray"
         }
     } catch {
-        $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-        Write-Host "[$timestamp] Error during auto-push: $_" -ForegroundColor Red
+        Log-Msg "Error during auto-push: $_" "Red"
     }
 
     Start-Sleep -Seconds $intervalSeconds
