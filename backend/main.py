@@ -23,9 +23,6 @@ app.include_router(products.router)
 # 1. Root Endpoint
 @app.get("/", tags=["General"])
 def read_root():
-    """
-    Root welcome endpoint.
-    """
     return {
         "message": "Welcome to StockMaster Inventory Management System"
     }
@@ -33,11 +30,7 @@ def read_root():
 # 2. Health & Database Status Endpoint
 @app.get("/health", tags=["General"])
 def get_health(db: Session = Depends(get_db)):
-    """
-    Health check endpoint verifying backend and SQLite database connectivity.
-    """
     db.execute(text("SELECT 1"))
-    
     inspector = inspect(engine)
     table_names = inspector.get_table_names()
 
@@ -54,15 +47,11 @@ def get_health(db: Session = Depends(get_db)):
 # 3. About Endpoint
 @app.get("/about", tags=["General"])
 def get_about():
-    """
-    About endpoint providing project metadata and current development phase.
-    """
     return {
         "application": "StockMaster Inventory Management System",
-        "phase": "Phase 03: Product CREATE Endpoint (POST /products/)",
+        "phase": "Phase 06: Complete Product CRUD APIs",
         "version": "1.0.0"
     }
 
-# Clean application startup when executed directly
 if __name__ == "__main__":
     uvicorn.run("backend.main:app", host="127.0.0.1", port=8000, reload=True)
