@@ -1,4 +1,27 @@
-# Auto-push script for CURD_Inventory-Management
+# STOCKMASTER — PROMPT 02: DATABASE FOUNDATION
+
+Continue the existing StockMaster project.
+
+Set up SQLite with SQLAlchemy ORM.
+
+Requirements:
+1. Configure database.py.
+2. Create a persistent SQLite database file.
+3. Configure SQLAlchemy engine and session management.
+4. Create models.py.
+5. Create Product, Category and StockMovement database models.
+6. Define primary keys and foreign keys.
+7. Define relationships:
+- One category has multiple products.
+- One product has multiple stock movements.
+8. Add created_at and updated_at fields where appropriate.
+9. Enable foreign key constraints.
+10. Create database tables automatically during application initialization.
+11. Verify database connection and table creation.
+
+Do not implement CRUD APIs yet.
+
+Preserve the existing application and verify everything works before stopping.# Auto-push script for CURD_Inventory-Management
 # Pushes changes to https://github.com/mahin1710/CURD_Inventory-Management every 10 minutes
 
 $repoDir = "C:\Users\mahed\Desktop\CURD_Inventory"
@@ -9,7 +32,8 @@ $tokenFile = Join-Path $repoDir ".git\github_token"
 $githubToken = ""
 if (Test-Path $tokenFile) {
     $githubToken = (Get-Content $tokenFile -Raw).Trim()
-} elseif ($env:GITHUB_TOKEN) {
+}
+elseif ($env:GITHUB_TOKEN) {
     $githubToken = $env:GITHUB_TOKEN.Trim()
 }
 
@@ -50,10 +74,12 @@ while ($true) {
             $output = git push origin main 2>&1
             Log-Msg "$output" "Green"
             Log-Msg "Successfully synced to GitHub!" "Green"
-        } else {
+        }
+        else {
             Log-Msg "Workspace clean. No changes to commit." "Gray"
         }
-    } catch {
+    }
+    catch {
         Log-Msg "Error during auto-push: $_" "Red"
     }
 
