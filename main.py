@@ -1,16 +1,40 @@
 from fastapi import FastAPI
 
-# FastAPI application instance create kora hocche
+# Initialize the FastAPI application
 app = FastAPI(
-    title="CURD_Inventory Management System",
-    description="Backend REST API for Inventory Management",
+    title="StockMaster Inventory System",
+    description="Backend REST API for StockMaster - Inventory Management System",
     version="1.0.0"
 )
 
-# Root GET Endpoint
+# 1. Root Endpoint
 @app.get("/")
-def home():
+def read_root():
+    """
+    Root endpoint that welcomes users to StockMaster.
+    """
     return {
-        "message": "Welcome to CURD_Inventory Management System API",
-        "status": "running"
+        "message": "Welcome to StockMaster Inventory Management System"
+    }
+
+# 2. Health Endpoint
+@app.get("/health")
+def get_health():
+    """
+    Health check endpoint to verify backend service status.
+    """
+    return {
+        "status": "healthy"
+    }
+
+# 3. About Endpoint
+@app.get("/about")
+def get_about():
+    """
+    About endpoint providing application details and current development phase.
+    """
+    return {
+        "application": "StockMaster Inventory Management System",
+        "phase": "Phase 01: Environment Setup and First FastAPI Application",
+        "version": "1.0.0"
     }
